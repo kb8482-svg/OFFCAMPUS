@@ -1,0 +1,24 @@
+{
+  "name": "offcampus-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "REST API for the OffCampus student expense manager",
+  "main": "src/server.js",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "db:init": "node scripts/init-db.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^2.5.0"
+  }
+}
