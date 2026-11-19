@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img" aria-labelledby="title desc">
+  <title id="title">Wireframes uporabniškega vmesnika OffCampus</title>
+  <desc id="desc">Šest sivinskih žičnih modelov za prijavo, pregled, transakcije, skupne stroške, cilje in profil.</desc>
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#f8f9fb"/><stop offset="1" stop-color="#edf1f5"/></linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="125%"><feDropShadow dx="0" dy="7" stdDeviation="9" flood-color="#223449" flood-opacity=".09"/></filter>
+    <style>
+      text{font-family:Inter,"Segoe UI",Arial,sans-serif;fill:#26364a}.title{font-size:48px;font-weight:750;letter-spacing:-1.2px}.sub{font-size:21px;fill:#657487}.cardTitle{font-size:18px;font-weight:750;letter-spacing:.3px}.label{font-size:12px;font-weight:650;fill:#566579}.tiny{font-size:10px;fill:#718096}.nav{font-size:11px;fill:#566579}.wire{fill:#fff;stroke:#c5ced8;stroke-width:1.5}.ghost{fill:#edf0f4;stroke:#d8dee6;stroke-width:1}.line{stroke:#aeb9c6;stroke-width:1.4}.button{fill:#e1e6ec;stroke:#bbc5d0;stroke-width:1.2}.accent{fill:#dfe8f1;stroke:#8ba0b6;stroke-width:1.2}.accentText{font-size:11px;font-weight:700;fill:#38516e}.pill{fill:#f3f5f7;stroke:#d2d9e1;stroke-width:1}.screen{font-size:9px;font-weight:700;letter-spacing:1px;fill:#8491a1}
+    </style>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#bg)"/><circle cx="1830" cy="75" r="170" fill="#e4eaf0" opacity=".7"/>
+  <text x="72" y="82" class="title">Žični modeli uporabniškega vmesnika</text>
+  <text x="75" y="119" class="sub">Osnovna razporeditev šestih zaslonov · wireframe prikazuje strukturo, ne končnega oblikovanja</text>
+
+  <!-- LOGIN -->
+  <g filter="url(#shadow)"><rect x="72" y="160" width="560" height="390" rx="19" class="wire"/><text x="96" y="193" class="screen">01 · PRIJAVA IN REGISTRACIJA</text><line x1="96" y1="209" x2="608" y2="209" class="line"/>
+    <rect x="218" y="232" width="268" height="290" rx="16" fill="#fafbfc" stroke="#d1d8e0"/><circle cx="352" cy="270" r="17" class="ghost"/><rect x="296" y="298" width="112" height="12" rx="6" class="ghost"/><rect x="245" y="326" width="214" height="10" rx="5" class="ghost"/>
+    <rect x="244" y="353" width="215" height="29" rx="8" class="pill"/><text x="258" y="372" class="tiny">Prijava</text><text x="353" y="372" class="tiny">Ustvari račun</text>
+    <rect x="244" y="394" width="215" height="35" rx="7" class="wire"/><text x="257" y="416" class="tiny">Uporabniško ime ali e-pošta</text>
+    <rect x="244" y="438" width="215" height="35" rx="7" class="wire"/><text x="257" y="460" class="tiny">Geslo</text>
+    <rect x="244" y="483" width="215" height="28" rx="7" class="accent"/><text x="351" y="501" text-anchor="middle" class="accentText">Prijava</text>
+  </g>
+
+  <!-- DASHBOARD -->
+  <g filter="url(#shadow)"><rect x="680" y="160" width="560" height="390" rx="19" class="wire"/><text x="704" y="193" class="screen">02 · PREGLED FINANC</text><line x1="704" y1="209" x2="1216" y2="209" class="line"/>
+    <rect x="704" y="224" width="105" height="302" rx="9" fill="#f5f6f8" stroke="#d7dde5"/><rect x="718" y="239" width="77" height="17" rx="5" class="ghost"/><rect x="718" y="273" width="77" height="20" rx="5" class="accent"/><rect x="718" y="305" width="77" height="14" rx="5" class="ghost"/><rect x="718" y="330" width="77" height="14" rx="5" class="ghost"/><rect x="718" y="355" width="77" height="14" rx="5" class="ghost"/><rect x="718" y="470" width="77" height="38" rx="8" class="ghost"/>
+    <text x="827" y="247" class="cardTitle">Pozdravljen/a</text><text x="827" y="267" class="tiny">Tvoj mesečni finančni pregled</text>
+    <rect x="827" y="284" width="119" height="54" rx="8" class="ghost"/><rect x="957" y="284" width="119" height="54" rx="8" class="ghost"/><rect x="1087" y="284" width="129" height="54" rx="8" class="ghost"/><text x="839" y="301" class="tiny">PRIHODKI</text><text x="969" y="301" class="tiny">ODHODKI</text><text x="1099" y="301" class="tiny">PRIHRANEK</text>
+    <rect x="827" y="350" width="389" height="100" rx="8" class="wire"/><text x="841" y="369" class="tiny">Interaktivni graf · prihodki in odhodki</text><path d="M850 430L900 410L950 417L1000 387L1050 398L1100 380L1175 390" fill="none" stroke="#93a4b6" stroke-width="2"/><line x1="845" y1="435" x2="1197" y2="435" class="line"/>
+    <rect x="827" y="463" width="188" height="48" rx="8" class="ghost"/><rect x="1025" y="463" width="191" height="48" rx="8" class="ghost"/><text x="839" y="482" class="tiny">CILJ VARČEVANJA</text><text x="1038" y="482" class="tiny">MESEČNA NAGRADA</text>
+  </g>
+
+  <!-- TRANSACTIONS -->
+  <g filter="url(#shadow)"><rect x="1288" y="160" width="560" height="390" rx="19" class="wire"/><text x="1312" y="193" class="screen">03 · PRIHODKI IN ODHODKI</text><line x1="1312" y1="209" x2="1824" y2="209" class="line"/>
+    <rect x="1312" y="224" width="208" height="302" rx="9" fill="#f5f6f8" stroke="#d7dde5"/><text x="1327" y="248" class="cardTitle">Nov zapis</text>
+    <rect x="1327" y="262" width="178" height="30" rx="7" class="accent"/><text x="1340" y="281" class="accentText">Odhodek  ▾</text>
+    <rect x="1327" y="302" width="178" height="29" rx="6" class="wire"/><text x="1340" y="321" class="tiny">Opis</text><rect x="1327" y="340" width="83" height="29" rx="6" class="wire"/><rect x="1420" y="340" width="85" height="29" rx="6" class="wire"/><text x="1338" y="359" class="tiny">Znesek</text><text x="1430" y="359" class="tiny">Kategorija</text>
+    <rect x="1327" y="378" width="178" height="29" rx="6" class="wire"/><text x="1340" y="397" class="tiny">Datum</text><rect x="1327" y="418" width="178" height="32" rx="7" class="button"/><text x="1416" y="439" text-anchor="middle" class="label">Shrani transakcijo</text><rect x="1327" y="462" width="178" height="48" rx="7" class="pill"/><text x="1340" y="481" class="tiny">Delitev stroška</text><text x="1340" y="497" class="tiny">s sostanovalci (neobvezno)</text>
+    <text x="1540" y="248" class="cardTitle">Nedavne transakcije</text><rect x="1540" y="266" width="284" height="42" rx="7" class="ghost"/><rect x="1540" y="317" width="284" height="42" rx="7" class="ghost"/><rect x="1540" y="368" width="284" height="42" rx="7" class="ghost"/><rect x="1540" y="419" width="284" height="42" rx="7" class="ghost"/><rect x="1540" y="470" width="284" height="42" rx="7" class="ghost"/><text x="1553" y="291" class="tiny">Datum · kategorija · opis</text><text x="1553" y="342" class="tiny">Datum · kategorija · opis</text><text x="1553" y="393" class="tiny">Datum · kategorija · opis</text>
+  </g>
+
+  <!-- BALANCE -->
+  <g filter="url(#shadow)"><rect x="72" y="590" width="560" height="390" rx="19" class="wire"/><text x="96" y="623" class="screen">04 · SKUPNI STROŠKI</text><line x1="96" y1="639" x2="608" y2="639" class="line"/><text x="96" y="672" class="cardTitle">Stanje s sostanovalci</text>
+    <rect x="96" y="689" width="240" height="60" rx="9" class="ghost"/><rect x="350" y="689" width="258" height="60" rx="9" class="ghost"/><text x="112" y="711" class="tiny">DOLGUJEŠ</text><text x="366" y="711" class="tiny">DOLGUJEJO TEBI</text><rect x="112" y="722" width="95" height="13" rx="6" class="wire"/><rect x="366" y="722" width="95" height="13" rx="6" class="wire"/>
+    <text x="96" y="781" class="label">Odprte delitve in zahteve za potrditev</text><rect x="96" y="795" width="512" height="145" rx="8" class="wire"/><rect x="96" y="795" width="512" height="30" rx="8" fill="#e8ecf1"/><text x="110" y="815" class="tiny">OPIS</text><text x="270" y="815" class="tiny">KDO DOLGUJE</text><text x="396" y="815" class="tiny">ZNESEK</text><text x="495" y="815" class="tiny">DEJANJE</text>
+    <line x1="96" y1="864" x2="608" y2="864" class="line"/><line x1="96" y1="903" x2="608" y2="903" class="line"/><text x="110" y="850" class="tiny">Skupna živila</text><text x="270" y="850" class="tiny">Matej</text><text x="396" y="850" class="tiny">18,00 €</text><rect x="490" y="833" width="100" height="23" rx="6" class="accent"/><text x="540" y="849" text-anchor="middle" class="tiny">Potrdi / poravnaj</text>
+    <text x="110" y="889" class="tiny">Najemnina</text><text x="270" y="889" class="tiny">Nina</text><text x="396" y="889" class="tiny">400,00 €</text>
+  </g>
+
+  <!-- GOALS AND REWARDS -->
+  <g filter="url(#shadow)"><rect x="680" y="590" width="560" height="390" rx="19" class="wire"/><text x="704" y="623" class="screen">05 · CILJI IN NAGRADE</text><line x1="704" y1="639" x2="1216" y2="639" class="line"/><text x="704" y="672" class="cardTitle">Finančni cilji</text>
+    <rect x="704" y="689" width="512" height="54" rx="8" class="ghost"/><text x="719" y="711" class="tiny">Ime cilja</text><rect x="845" y="701" width="100" height="30" rx="6" class="wire"/><text x="858" y="720" class="tiny">Varčevanje</text><rect x="955" y="701" width="100" height="30" rx="6" class="wire"/><text x="968" y="720" class="tiny">Mesec</text><rect x="1065" y="701" width="135" height="30" rx="6" class="button"/><text x="1132" y="720" text-anchor="middle" class="tiny">Dodaj cilj</text>
+    <rect x="704" y="757" width="245" height="102" rx="9" class="wire"/><text x="720" y="780" class="label">Rezerva za poletje</text><text x="720" y="801" class="tiny">Prihranil: 240 € od 500 €</text><rect x="720" y="817" width="212" height="9" rx="4" fill="#e6eaf0"/><rect x="720" y="817" width="102" height="9" rx="4" fill="#a9b8c8"/><rect x="720" y="835" width="100" height="17" rx="5" class="accent"/><text x="770" y="847" text-anchor="middle" class="tiny">+ Vnesi prihranek</text>
+    <rect x="964" y="757" width="252" height="102" rx="9" class="wire"/><text x="980" y="780" class="label">Mesečni proračun</text><text x="980" y="801" class="tiny">Poraba: 310 € od 400 €</text><rect x="980" y="817" width="220" height="9" rx="4" fill="#e6eaf0"/><rect x="980" y="817" width="171" height="9" rx="4" fill="#a9b8c8"/><text x="704" y="890" class="label">Mesečna priznanja</text><rect x="704" y="903" width="158" height="43" rx="9" class="pill"/><text x="783" y="929" text-anchor="middle" class="tiny">Varčen mesec</text><rect x="874" y="903" width="158" height="43" rx="9" class="pill"/><text x="953" y="929" text-anchor="middle" class="tiny">Redno beleženje</text><rect x="1044" y="903" width="172" height="43" rx="9" class="pill"/><text x="1130" y="929" text-anchor="middle" class="tiny">Cilj dosežen</text>
+  </g>
+
+  <!-- PROFILE -->
+  <g filter="url(#shadow)"><rect x="1288" y="590" width="560" height="390" rx="19" class="wire"/><text x="1312" y="623" class="screen">06 · UPORABNIŠKI PROFIL</text><line x1="1312" y1="639" x2="1824" y2="639" class="line"/><text x="1312" y="672" class="cardTitle">Moj račun</text>
+    <circle cx="1390" cy="755" r="54" class="ghost"/><circle cx="1390" cy="740" r="17" fill="#dce2e9"/><path d="M1359 786Q1362 758 1390 758Q1418 758 1421 786" fill="#dce2e9" stroke="#c5ced8"/><rect x="1326" y="824" width="128" height="29" rx="7" class="button"/><text x="1390" y="843" text-anchor="middle" class="tiny">Naloži fotografijo</text>
+    <text x="1485" y="711" class="tiny">PRIKAZNO IME</text><rect x="1485" y="721" width="322" height="35" rx="7" class="wire"/><text x="1500" y="743" class="label">Ime in priimek</text><text x="1485" y="781" class="tiny">UPORABNIŠKO IME</text><rect x="1485" y="791" width="322" height="35" rx="7" class="wire"/><text x="1500" y="813" class="label">student_01</text><text x="1485" y="851" class="tiny">E-POŠTNI NASLOV</text><rect x="1485" y="861" width="322" height="35" rx="7" class="wire"/><text x="1500" y="883" class="label">ime@example.si</text><rect x="1485" y="914" width="118" height="31" rx="7" class="accent"/><text x="1544" y="934" text-anchor="middle" class="accentText">Shrani profil</text>
+  </g>
+
+  <text x="72" y="1033" class="sub">Wireframe = načrt postavitve. Barve, tipografija in podrobnosti se določijo v naslednji fazi oblikovanja.</text>
+  <text x="1848" y="1033" text-anchor="end" class="sub">OffCampus · 03</text>
+</svg>

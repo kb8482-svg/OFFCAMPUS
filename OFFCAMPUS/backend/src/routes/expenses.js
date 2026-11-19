@@ -22,9 +22,13 @@ function cents(value) {
 function validateExpense(body, ownerId) {
   const categoryId = Number(body.categoryId);
   const amount = Number(body.amount);
+  const transactionType = body.type === undefined ? 'expense' : body.type;
   const description = typeof body.description === 'string' ? body.description.trim() : '';
   const isShared = body.isShared === true;
 
+  if (!['expense', 'income'].includes(transactionType)) {
+    throw new ApiError(400, 'Type must be either expense or income.');
+  }
   if (!Number.isSafeInteger(categoryId) || categoryId < 1) {
     throw new ApiError(400, 'Choose a valid category.');
   }
@@ -37,8 +41,9 @@ function validateExpense(body, ownerId) {
   if (!description || description.length > 250) {
     throw new ApiError(400, 'Description is required and must be 250 characters or fewer.');
   }
-  if (!db.prepare('SELECT id FROM categories WHERE id = ?').get(categoryId)) {
-    throw new ApiError(400, 'The selected category does not exist.');
+  const category = db.prepare('SELECT id, kind FROM categories WHERE id = ?').get(categoryId);
+  if (!category || category.kind !== transactionType) {
+    throw new ApiError(400, 'Choose a category that matches this income or expense.');
   }
 
   const dateInput = body.date || new Date().toISOString().slice(0, 10);
@@ -56,6 +61,9 @@ function validateExpense(body, ownerId) {
   }
   if (isShared && rawSplits.length === 0) {
     throw new ApiError(400, 'Add at least one roommate to a shared expense.');
+  }
+  if (transactionType === 'income' && (isShared || rawSplits.length > 0)) {
+    throw new ApiError(400, 'Income cannot be split with roommates.');
   }
   if (!isShared && rawSplits.length > 0) {
     throw new ApiError(400, 'Turn on shared expense to add roommate splits.');
@@ -91,7 +99,7 @@ function validateExpense(body, ownerId) {
     }
   }
 
-  return { categoryId, amount, description, date: dateInput, isShared, splits };
+  return { categoryId, amount, description, date: dateInput, transactionType, isShared, splits };
 }
 
 function saveSplits(expenseId, splits) {
@@ -106,7 +114,7 @@ function saveSplits(expenseId, splits) {
 function getExpenseList(whereSql, parameters, viewerId) {
   const expenses = db.prepare(`
     SELECT e.id, e.user_id, u.username AS payer, e.category_id, c.name AS category,
-           e.amount, e.description, e.date, e.is_shared
+           e.amount, e.description, e.date, e.transaction_type AS type, e.is_shared
     FROM expenses e
     JOIN users u ON u.id = e.user_id
     JOIN categories c ON c.id = e.category_id
@@ -159,11 +167,11 @@ router.post('/', (req, res) => {
   const expense = validateExpense(req.body, req.user.id);
   const id = inTransaction(() => {
     const result = db.prepare(`
-      INSERT INTO expenses (user_id, category_id, amount, description, date, is_shared)
-      VALUES (?, ?, ?, ?, ?, ?)
+      INSERT INTO expenses (user_id, category_id, amount, description, date, transaction_type, is_shared)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
     `).run(
       req.user.id, expense.categoryId, expense.amount, expense.description,
-      expense.date, expense.isShared ? 1 : 0
+      expense.date, expense.transactionType, expense.isShared ? 1 : 0
     );
     const expenseId = Number(result.lastInsertRowid);
     saveSplits(expenseId, expense.splits);
@@ -184,11 +192,11 @@ router.put('/:id', (req, res) => {
   inTransaction(() => {
     db.prepare(`
       UPDATE expenses
-      SET category_id = ?, amount = ?, description = ?, date = ?, is_shared = ?
+      SET category_id = ?, amount = ?, description = ?, date = ?, transaction_type = ?, is_shared = ?
       WHERE id = ? AND user_id = ?
     `).run(
       expense.categoryId, expense.amount, expense.description, expense.date,
-      expense.isShared ? 1 : 0, id, req.user.id
+      expense.transactionType, expense.isShared ? 1 : 0, id, req.user.id
     );
     db.prepare('DELETE FROM expense_splits WHERE expense_id = ?').run(id);
     saveSplits(id, expense.splits);
@@ -327,11 +335,51 @@ router.get('/summary', (req, res) => {
     FROM categories c
     LEFT JOIN expenses e
       ON e.category_id = c.id AND e.user_id = ? AND e.date >= ? AND e.date < ?
+         AND e.transaction_type = c.kind
+    WHERE c.kind = 'expense'
     GROUP BY c.id, c.name
     ORDER BY total DESC, c.name
   `).all(req.user.id, start, next);
   const total = categories.reduce((sum, category) => sum + category.total, 0);
-  res.json({ month, total, categories: categories.filter((category) => category.expenseCount > 0) });
+  const incomeTotal = db.prepare(`
+    SELECT COALESCE(SUM(amount), 0) AS total
+    FROM expenses WHERE user_id = ? AND transaction_type = 'income' AND date >= ? AND date < ?
+  `).get(req.user.id, start, next).total;
+  res.json({
+    month, total, expenseTotal: total, incomeTotal, net: incomeTotal - total,
+    categories: categories.filter((category) => category.expenseCount > 0)
+  });
+});
+
+router.get('/trend', (req, res) => {
+  const months = Number(req.query.months || 6);
+  if (![3, 6, 12].includes(months)) {
+    throw new ApiError(400, 'Months must be 3, 6, or 12.');
+  }
+  const today = new Date();
+  const currentMonth = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), 1);
+  const startMonth = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth() - months + 1, 1));
+  const start = startMonth.toISOString().slice(0, 10);
+  const end = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth() + 1, 1)).toISOString().slice(0, 10);
+  const rows = db.prepare(`
+    SELECT strftime('%Y-%m', date) AS month, transaction_type AS type, SUM(amount) AS total
+    FROM expenses
+    WHERE user_id = ? AND date >= ? AND date < ?
+    GROUP BY strftime('%Y-%m', date), transaction_type
+  `).all(req.user.id, start, end);
+  const totals = new Map();
+  for (const row of rows) {
+    if (!totals.has(row.month)) totals.set(row.month, { income: 0, expenses: 0 });
+    totals.get(row.month)[row.type === 'income' ? 'income' : 'expenses'] = row.total;
+  }
+  const series = [];
+  for (let index = 0; index < months; index += 1) {
+    const date = new Date(Date.UTC(startMonth.getUTCFullYear(), startMonth.getUTCMonth() + index, 1));
+    const month = date.toISOString().slice(0, 7);
+    const values = totals.get(month) || { income: 0, expenses: 0 };
+    series.push({ month, ...values, net: values.income - values.expenses });
+  }
+  res.json({ months, currentMonth: new Date(currentMonth).toISOString().slice(0, 7), series });
 });
 
 router.get('/balance', (req, res) => {

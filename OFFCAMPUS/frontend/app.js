@@ -2,6 +2,7 @@
   const $ = (selector) => document.querySelector(selector);
   const tokenKey = 'offcampus_token';
   const userKey = 'offcampus_user';
+  const apiBaseUrl = window.OFFCAMPUS_API_URL || 'http://127.0.0.1:3000';
   const languageKey = 'offcampus_language';
   const currencyKey = 'offcampus_currency';
   const translations = {
@@ -345,7 +346,7 @@
       headers.set('Content-Type', 'application/json');
     }
     if (state.token) headers.set('Authorization', `Bearer ${state.token}`);
-    const response = await fetch(`${window.OFFCAMPUS_API_URL || ''}/api${path}`, {
+    const response = await fetch(`${apiBaseUrl}/api${path}`, {
       ...options,
       headers
     });
@@ -476,7 +477,7 @@
       state.avatarObjectUrl = null;
     }
     if (profile.hasAvatar && !state.avatarObjectUrl) {
-      const response = await fetch(`${window.OFFCAMPUS_API_URL || ''}/api/profile/avatar`, {
+      const response = await fetch(`${apiBaseUrl}/api/profile/avatar`, {
         headers: { Authorization: 'Bearer '.concat(state.token) }
       });
       if (!response.ok) {
@@ -809,7 +810,7 @@
 
   async function downloadReceipt(expenseId, receipt) {
     try {
-      const response = await fetch(`${window.OFFCAMPUS_API_URL || ''}/api/expenses/${expenseId}/receipts/${receipt.id}`, {
+      const response = await fetch(`${apiBaseUrl}/api/expenses/${expenseId}/receipts/${receipt.id}`, {
         headers: { Authorization: 'Bearer '.concat(state.token) }
       });
       if (!response.ok) {

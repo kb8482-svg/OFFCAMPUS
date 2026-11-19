@@ -1,25 +1,35 @@
 # OffCampus — Smart Expense & Split Manager
 
-OffCampus is a local-first student project for tracking personal expenses and sharing bills with roommates. The Express backend serves the vanilla HTML/CSS/JavaScript client and the JSON REST API from one origin, so you do **not** need a domain, hosting provider, or outside server to develop and demonstrate it.
+A student expense and roommate-splitting web application. The frontend and REST API run as separate local servers and communicate with `fetch()` and JSON.
 
 ## Requirements
 
-- Node.js 22.13 or newer (Node.js 24 LTS is recommended; the project uses `node:sqlite`).
-- npm.
+- Node.js 22.13 or newer (the project uses `node:sqlite`)
+- npm
 
-## Start locally on Windows
+## Run the app on Windows
 
-Open PowerShell in `offcampus\backend` and run:
+If your PowerShell prompt currently ends with `\SEMINAR>`, first change into the backend folder:
 
 ```powershell
+Set-Location .\OFFCAMPUS\backend
 npm install
 npm run db:init
-npm run dev
+npm start
 ```
 
-Then open **http://localhost:3000** in your browser. The app and API are both served by the Node process, which listens only on your own computer by default. To stop it, press `Ctrl+C`.
+Keep that terminal open. The API listens at **http://127.0.0.1:3000**. Check it at **http://127.0.0.1:3000/api/health**.
 
-The database is created at `backend\data\offcampus.sqlite`. The initializer is safe to run again: it adds missing sample users and only inserts demonstration expenses when the database has no expenses.
+Keep the API terminal running. Open a second PowerShell terminal, go to the same backend folder, and start the frontend:
+
+```powershell
+Set-Location .\OFFCAMPUS\backend
+npm run dev:frontend
+```
+
+Open **http://127.0.0.1:5173** in your browser. The frontend server uses port 5173 and the API uses port 3000; they are separate origins. The API allows the frontend origin through CORS.
+
+Stop either server with `Ctrl+C` in its terminal. If you change a demo password or sample data and want to restore the demo credentials, run `npm run db:init` again. The initializer keeps existing non-demo users and expenses.
 
 ### Demo accounts
 
@@ -29,67 +39,60 @@ The database is created at `backend\data\offcampus.sqlite`. The initializer is s
 | `wellsey` | `GarrettG44!` |
 | `jlo` | `Maverick22!` |
 
-These are local demonstration accounts, not production credentials. Create your own account for normal use.
+These are local demonstration accounts. The database is at `backend\data\offcampus.sqlite`.
 
-### Optional configuration
+## Features
 
-Copy `.env.example` to `.env` in `backend` to set the port, a persistent JWT signing secret, or CORS origins:
+- Register and sign in with a username or email; passwords are hashed with bcrypt.
+- Add, edit, and delete personal expenses.
+- Propose roommate shares and accept or decline incoming requests.
+- Review balances and mark accepted shares settled.
+- View spending summaries by category.
+- Create savings goals and spending budgets, and record contributions.
+- Maintain a private profile picture and attach private receipts to expenses.
+- Switch the interface between English and Slovenian, and display EUR or USD (display only; no currency conversion).
 
-```powershell
-Copy-Item .env.example .env
+## Project layout
+
+```text
+OFFCAMPUS/
+  backend/       Express REST API, SQLite database, and database initializer
+  frontend/      HTML, CSS, JavaScript, and separate static web server
+  docs/          Database relationship diagram and presentation notes
 ```
 
-The frontend is served by Express by default. If you choose to serve the frontend separately (for example with a development server on port 5173), set `FRONTEND_ORIGINS` in `.env` to that exact origin. The application does not require the separate server or external services. For production, set a strong private `JWT_SECRET`; the server refuses to start in production without one. A random in-memory secret is used only when developing locally without a `.env` file, so local sessions expire when the server restarts.
+## Database presentation material
 
-## Initialize / reset sample data
-
-`npm run db:init` creates the tables and seeds the example accounts plus a few expenses. It does not erase existing data. To start over, stop the server and manually remove the specific local database file `backend\data\offcampus.sqlite`, then run the initializer again.
+See [docs/database-and-presentation.md](docs/database-and-presentation.md) for the Mermaid ER diagram, relationship explanations, screen overview, architecture diagram, and suggested presentation sequence.
 
 ## API overview
 
-Most API responses use JSON; profile pictures and receipt downloads return file content, while successful deletes return `204 No Content`.
-All routes except registration, login, and the health check require authentication.
+All routes except registration, login, and the health check require `Authorization: Bearer <token>`.
 
 | Method | Route | Purpose |
 |---|---|---|
-| `POST` | `/api/auth/register` | Create an account and receive a JWT |
-| `POST` | `/api/auth/login` | Sign in with username or email |
-| `GET` | `/api/health` | Check that the local API is running |
+| `POST` | `/api/auth/register` | Create an account |
+| `POST` | `/api/auth/login` | Sign in |
+| `GET` | `/api/health` | Check API status |
 | `GET` | `/api/categories` | List expense categories |
-| `GET` | `/api/users` | List other usernames for shared expenses |
-| `GET` | `/api/expenses` | List expenses you paid or participate in |
-| `POST` | `/api/expenses` | Create an expense and optional roommate splits |
-| `PUT` | `/api/expenses/:id` | Update an expense you created |
-| `DELETE` | `/api/expenses/:id` | Delete an expense you created |
-| `GET` | `/api/expenses/summary?month=YYYY-MM` | Category breakdown of expenses you paid |
-| `GET` | `/api/expenses/balance` | Unsettled shared splits involving your account |
-| `PATCH` | `/api/expenses/:id/splits/:splitId/decision` | Accept or decline a shared-expense request assigned to you |
-| `PATCH` | `/api/expenses/:id/splits/:splitId` | Mark a split settled or reopen it |
-| `GET`, `PATCH` | `/api/profile` | View or update your own display name |
-| `GET`, `PUT`, `DELETE` | `/api/profile/avatar` | View, upload, or remove your own profile picture |
-| `GET`, `POST` | `/api/goals` | List or create your own savings and spending goals |
-| `POST` | `/api/goals/:id/contributions` | Record a savings contribution |
-| `DELETE` | `/api/goals/:id/contributions/:contributionId` | Remove your savings contribution |
-| `GET` | `/api/expenses/receipts` | List receipts attached to expenses you paid |
-| `GET`, `POST` | `/api/expenses/:id/receipts` | List or upload receipts for an expense you paid |
-| `GET`, `DELETE` | `/api/expenses/:id/receipts/:receiptId` | Download or remove your private receipt |
-
-For a shared expense, split amounts are proposed amounts owed by each listed roommate to the person who paid. The payer is responsible for the remainder. Amounts must be positive, and roommate shares may not exceed the expense total. A roommate must accept a proposed share before it appears in either person's balance; they can decline it instead. An accepted share can be marked settled by the roommate or the payer. Roommates see only their own share; the person who created the expense can see all its splits. Usernames are unique regardless of letter case.
-
-Savings progress is entered manually because the app does not connect to bank accounts. Weekly, monthly, and yearly budgets total the expenses you entered as paid by you during the current period. Each user can have one goal of each type per period. Profile details and receipt files are private to the signed-in owner; receipts must be attached to an expense you paid. Uploads accept JPEG, PNG, WebP, or PDF files, with a 10 MB per-file limit, a 5 MB avatar limit, and 100 MB total private storage per user.
-
-The app does not process payments, ask for bank passwords, use a paid subscription, or load third-party web fonts. Uploaded files are stored outside the public frontend and served only after authentication and ownership checks. However, anyone with access to the computer or server files can access its local database and stored files; this local-first app cannot hide data from its machine operator. Keep backups private and do not upload sensitive receipts to a public GitHub repository.
-
-The interface supports English and Slovenian, and users can choose EUR or USD for displaying amounts. Currency selection changes the symbol and formatting only; it does not convert or otherwise change the stored values. Language and currency preferences are saved in the current browser.
-
-The implementation includes parameterized SQLite queries, foreign keys, transactional expense/split writes, bcrypt password hashing, expiring JWTs, request validation, CORS allowlisting, private owner-scoped uploads, and centralized JSON errors. JWTs are stored in browser `localStorage` for this coursework demo; for a public production deployment, use secure, HttpOnly cookies and add deployment-specific protections.
+| `GET` | `/api/users` | List possible roommates |
+| `GET`, `POST` | `/api/expenses` | List or add expenses |
+| `PUT`, `DELETE` | `/api/expenses/:id` | Update or delete an expense |
+| `GET` | `/api/expenses/summary` | Category totals for a month |
+| `GET` | `/api/expenses/balance` | Pending shares and current balances |
+| `PATCH` | `/api/expenses/:id/splits/:splitId/decision` | Accept or decline a proposed split |
+| `PATCH` | `/api/expenses/:id/splits/:splitId` | Mark an accepted share settled or reopen it |
+| `GET`, `PATCH` | `/api/profile` | View or update your profile |
+| `GET`, `PUT`, `DELETE` | `/api/profile/avatar` | View, upload, or remove a profile picture |
+| `GET`, `POST` | `/api/goals` | List or create goals |
+| `POST` | `/api/goals/:id/contributions` | Record a contribution |
+| `GET`, `POST` | `/api/expenses/:id/receipts` | List or upload expense receipts |
+| `GET`, `DELETE` | `/api/expenses/:id/receipts/:receiptId` | Download or remove a receipt |
 
 ## Tests
 
-From `offcampus\backend`:
+From `OFFCAMPUS\backend`, run `npm test`. The tests use a temporary database.
 
-```powershell
-npm test
-```
+## Configuration
 
-Tests use a temporary SQLite database and do not modify the demonstration database.
+The API defaults to `127.0.0.1:3000`; the frontend defaults to `127.0.0.1:5173`. `PORT`, `HOST`, and `FRONTEND_PORT` can be set in `backend/.env`. Set `FRONTEND_ORIGINS` to a comma-separated list if serving the frontend from another origin. Set a persistent, private `JWT_SECRET` before any production deployment.

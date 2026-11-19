@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img" aria-labelledby="title desc">
+  <title id="title">Podatkovni model OffCampus</title>
+  <desc id="desc">ER diagram tabel users, categories, expenses, expense_splits, expense_receipts, goals in goal_contributions ter njihovih povezav.</desc>
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#f7f9fc"/><stop offset="1" stop-color="#edf2f7"/></linearGradient>
+    <filter id="shadow" x="-12%" y="-12%" width="125%" height="130%"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#19304b" flood-opacity=".10"/></filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M1 1L10 6L1 11" fill="none" stroke="#8292a5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker>
+    <style>
+      text{font-family:Inter,"Segoe UI",Arial,sans-serif;fill:#172b45}.title{font-size:52px;font-weight:760;letter-spacing:-1.4px}.sub{font-size:22px;fill:#64778e}.entity{font-size:23px;font-weight:750;fill:#fff;letter-spacing:.2px}.entitySub{font-size:14px;font-weight:650;fill:#e8f0fa;letter-spacing:1px}.field{font-size:17px;fill:#344a62}.key{font-size:11px;font-weight:800;letter-spacing:.5px}.rel{font-size:14px;font-weight:750;fill:#334b65}.legend{font-size:17px;fill:#536a82}.foot{font-size:16px;fill:#667b91}
+    </style>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#bg)"/><circle cx="1800" cy="80" r="190" fill="#ddece9" opacity=".43"/><circle cx="110" cy="1020" r="190" fill="#e3e8f4" opacity=".5"/>
+  <text x="76" y="84" class="title">Podatkovni model</text>
+  <text x="78" y="122" class="sub">ERD · tabele, ključi in povezave</text>
+
+  <!-- Relationships are behind the tables. Label pills state the cardinality and meaning. -->
+  <g fill="none" stroke="#8292a5" stroke-width="2.7" marker-end="url(#arrow)" opacity=".92">
+    <path d="M418 492H526"/>
+    <path d="M710 330V405"/>
+    <path d="M890 530L1005 325"/>
+    <path d="M890 692H1005"/>
+    <path d="M403 760L450 850H966V464L1005 442"/>
+    <path d="M382 760L470 920H982V745L1005 715"/>
+    <path d="M365 330V157H1440V300H1485"/>
+    <path d="M1660 430V565"/>
+    <path d="M392 760L440 970H1445V855L1485 824"/>
+  </g>
+  <g>
+    <rect x="426" y="465" width="94" height="29" rx="14" fill="#fff"/><text x="473" y="485" text-anchor="middle" class="rel">1:N plača</text>
+    <rect x="650" y="344" width="120" height="28" rx="14" fill="#fff"/><text x="710" y="363" text-anchor="middle" class="rel">1:N razvrsti</text>
+    <rect x="905" y="390" width="96" height="28" rx="14" fill="#fff"/><text x="953" y="409" text-anchor="middle" class="rel">1:N deleži</text>
+    <rect x="909" y="662" width="94" height="28" rx="14" fill="#fff"/><text x="956" y="681" text-anchor="middle" class="rel">1:N računi</text>
+    <rect x="690" y="833" width="176" height="28" rx="14" fill="#fff"/><text x="778" y="852" text-anchor="middle" class="rel">1:N uporabnik dolguje</text>
+    <rect x="680" y="904" width="190" height="28" rx="14" fill="#fff"/><text x="775" y="923" text-anchor="middle" class="rel">1:N uporabnik naloži</text>
+    <rect x="935" y="139" width="147" height="29" rx="14" fill="#fff"/><text x="1008" y="159" text-anchor="middle" class="rel">1:N ustvari cilje</text>
+    <rect x="1612" y="475" width="96" height="28" rx="14" fill="#fff"/><text x="1660" y="494" text-anchor="middle" class="rel">1:N vnosi</text>
+    <rect x="1084" y="952" width="198" height="28" rx="14" fill="#fff"/><text x="1183" y="971" text-anchor="middle" class="rel">1:N zabeleži prihranek</text>
+  </g>
+
+  <!-- USERS -->
+  <g filter="url(#shadow)"><rect x="76" y="330" width="342" height="430" rx="18" fill="#fff"/><path d="M94 330H400Q418 330 418 348V382H76V348Q76 330 94 330Z" fill="#294b78"/><text x="98" y="364" class="entity">users</text><text x="394" y="361" text-anchor="end" class="entitySub">UPORABNIK</text>
+    <text x="98" y="418" class="field">id</text><rect x="354" y="399" width="40" height="23" rx="11" fill="#e5edf8"/><text x="374" y="415" text-anchor="middle" class="key" fill="#294b78">PK</text>
+    <text x="98" y="462" class="field">username</text><rect x="344" y="443" width="50" height="23" rx="11" fill="#e5edf8"/><text x="369" y="459" text-anchor="middle" class="key" fill="#294b78">UNIK</text>
+    <text x="98" y="506" class="field">email</text><rect x="344" y="487" width="50" height="23" rx="11" fill="#e5edf8"/><text x="369" y="503" text-anchor="middle" class="key" fill="#294b78">UNIK</text>
+    <text x="98" y="550" class="field">password_hash</text><text x="98" y="594" class="field">display_name</text><text x="98" y="638" class="field">avatar_key</text><text x="98" y="682" class="field">avatar_size</text><text x="98" y="726" class="field">created_at</text>
+  </g>
+
+  <!-- CATEGORIES -->
+  <g filter="url(#shadow)"><rect x="526" y="115" width="368" height="215" rx="18" fill="#fff"/><path d="M544 115H876Q894 115 894 133V167H526V133Q526 115 544 115Z" fill="#5275a3"/><text x="548" y="149" class="entity">categories</text><text x="870" y="146" text-anchor="end" class="entitySub">KATEGORIJA</text>
+    <text x="548" y="207" class="field">id</text><rect x="830" y="188" width="40" height="23" rx="11" fill="#e7eef8"/><text x="850" y="204" text-anchor="middle" class="key" fill="#385d8b">PK</text>
+    <text x="548" y="251" class="field">name</text><rect x="820" y="232" width="50" height="23" rx="11" fill="#e7eef8"/><text x="845" y="248" text-anchor="middle" class="key" fill="#385d8b">UNIK</text>
+    <text x="548" y="295" class="field">kind · prihodek / odhodek</text>
+  </g>
+
+  <!-- EXPENSES / TRANSACTIONS -->
+  <g filter="url(#shadow)"><rect x="526" y="405" width="368" height="385" rx="18" fill="#fff"/><path d="M544 405H876Q894 405 894 423V457H526V423Q526 405 544 405Z" fill="#14877e"/><text x="548" y="439" class="entity">expenses</text><text x="870" y="436" text-anchor="end" class="entitySub">TRANSAKCIJA</text>
+    <text x="548" y="497" class="field">id</text><rect x="830" y="478" width="40" height="23" rx="11" fill="#e0f2ef"/><text x="850" y="494" text-anchor="middle" class="key" fill="#116b64">PK</text>
+    <text x="548" y="541" class="field">user_id</text><rect x="820" y="522" width="50" height="23" rx="11" fill="#e0f2ef"/><text x="845" y="538" text-anchor="middle" class="key" fill="#116b64">FK</text>
+    <text x="548" y="585" class="field">category_id</text><rect x="820" y="566" width="50" height="23" rx="11" fill="#e0f2ef"/><text x="845" y="582" text-anchor="middle" class="key" fill="#116b64">FK</text>
+    <text x="548" y="629" class="field">amount · transaction_type</text><text x="548" y="673" class="field">description · date</text><text x="548" y="717" class="field">is_shared · created_at</text><text x="548" y="761" class="field" fill="#687e93">znesek, datum in vrsta zapisa</text>
+  </g>
+
+  <!-- SPLITS -->
+  <g filter="url(#shadow)"><rect x="1005" y="165" width="375" height="300" rx="18" fill="#fff"/><path d="M1023 165H1362Q1380 165 1380 183V217H1005V183Q1005 165 1023 165Z" fill="#c87e4b"/><text x="1027" y="199" class="entity">expense_splits</text><text x="1355" y="196" text-anchor="end" class="entitySub">DELEŽI</text>
+    <text x="1027" y="257" class="field">id</text><rect x="1306" y="238" width="50" height="23" rx="11" fill="#fbecdf"/><text x="1331" y="254" text-anchor="middle" class="key" fill="#965b32">PK</text>
+    <text x="1027" y="301" class="field">expense_id · user_id</text><rect x="1306" y="282" width="50" height="23" rx="11" fill="#fbecdf"/><text x="1331" y="298" text-anchor="middle" class="key" fill="#965b32">FK</text>
+    <text x="1027" y="345" class="field">share_amount</text><text x="1027" y="389" class="field">status · settled</text><text x="1027" y="433" class="field">čaka · sprejeto · poravnano</text>
+  </g>
+
+  <!-- RECEIPTS -->
+  <g filter="url(#shadow)"><rect x="1005" y="570" width="375" height="245" rx="18" fill="#fff"/><path d="M1023 570H1362Q1380 570 1380 588V622H1005V588Q1005 570 1023 570Z" fill="#a16e94"/><text x="1027" y="604" class="entity">expense_receipts</text><text x="1355" y="601" text-anchor="end" class="entitySub">RAČUNI</text>
+    <text x="1027" y="662" class="field">id · expense_id · user_id</text><rect x="1306" y="643" width="50" height="23" rx="11" fill="#f1e8f0"/><text x="1331" y="659" text-anchor="middle" class="key" fill="#7c5273">PK/FK</text>
+    <text x="1027" y="706" class="field">storage_key · mime_type</text><text x="1027" y="750" class="field">original_name · size_bytes</text><text x="1027" y="794" class="field">datoteka je shranjena zasebno</text>
+  </g>
+
+  <!-- GOALS -->
+  <g filter="url(#shadow)"><rect x="1485" y="170" width="360" height="260" rx="18" fill="#fff"/><path d="M1503 170H1827Q1845 170 1845 188V222H1485V188Q1485 170 1503 170Z" fill="#497d65"/><text x="1507" y="204" class="entity">goals</text><text x="1820" y="201" text-anchor="end" class="entitySub">CILJI</text>
+    <text x="1507" y="262" class="field">id · user_id</text><rect x="1770" y="243" width="50" height="23" rx="11" fill="#e6f1e9"/><text x="1795" y="259" text-anchor="middle" class="key" fill="#38654e">PK/FK</text>
+    <text x="1507" y="306" class="field">type · period</text><text x="1507" y="350" class="field">name · target_amount</text><text x="1507" y="394" class="field">varčevalni cilj ali proračun</text>
+  </g>
+
+  <!-- CONTRIBUTIONS -->
+  <g filter="url(#shadow)"><rect x="1485" y="565" width="360" height="290" rx="18" fill="#fff"/><path d="M1503 565H1827Q1845 565 1845 583V617H1485V583Q1485 565 1503 565Z" fill="#66805a"/><text x="1507" y="599" class="entity">goal_contributions</text><text x="1820" y="596" text-anchor="end" class="entitySub">PRISPEVKI</text>
+    <text x="1507" y="657" class="field">id · goal_id · user_id</text><rect x="1770" y="638" width="50" height="23" rx="11" fill="#eaf0e5"/><text x="1795" y="654" text-anchor="middle" class="key" fill="#506746">PK/FK</text>
+    <text x="1507" y="701" class="field">amount · date</text><text x="1507" y="745" class="field">note · created_at</text><text x="1507" y="799" class="field">zabeleženi prihranki</text>
+  </g>
+
+  <rect x="76" y="1000" width="1768" height="48" rx="15" fill="#e4eaf2"/>
+  <text x="100" y="1031" class="legend"><tspan font-weight="800">PK</tspan> primarni ključ</text><text x="325" y="1031" class="legend"><tspan font-weight="800">FK</tspan> tuji ključ</text><text x="520" y="1031" class="legend"><tspan font-weight="800">UNIK</tspan> enolična vrednost</text><text x="815" y="1031" class="foot">Mesečne nagrade se izračunajo iz aktivnosti in ciljev; nimajo svoje tabele.</text><text x="1815" y="1031" text-anchor="end" class="foot">OffCampus · 02</text>
+</svg>

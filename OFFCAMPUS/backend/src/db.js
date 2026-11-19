@@ -22,7 +22,8 @@ db.exec(`
 
   CREATE TABLE IF NOT EXISTS categories (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL UNIQUE
+    name TEXT NOT NULL UNIQUE,
+    kind TEXT NOT NULL DEFAULT 'expense' CHECK (kind IN ('expense', 'income'))
   );
 
   CREATE TABLE IF NOT EXISTS expenses (
@@ -32,6 +33,7 @@ db.exec(`
     amount REAL NOT NULL CHECK (amount > 0),
     description TEXT NOT NULL,
     date TEXT NOT NULL,
+    transaction_type TEXT NOT NULL DEFAULT 'expense' CHECK (transaction_type IN ('expense', 'income')),
     is_shared INTEGER NOT NULL DEFAULT 0 CHECK (is_shared IN (0, 1)),
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
   );
@@ -105,9 +107,25 @@ if (!splitColumns.some((column) => column.name === 'status')) {
   `);
 }
 
-const insertCategory = db.prepare('INSERT OR IGNORE INTO categories (name) VALUES (?)');
-for (const name of ['Food', 'Rent', 'Phone', 'Utilities', 'Entertainment', 'Transport', 'Other']) {
-  insertCategory.run(name);
+const categoryColumns = db.prepare('PRAGMA table_info(categories)').all();
+if (!categoryColumns.some((column) => column.name === 'kind')) {
+  db.exec("ALTER TABLE categories ADD COLUMN kind TEXT NOT NULL DEFAULT 'expense' CHECK (kind IN ('expense', 'income'))");
+}
+
+const expenseColumns = db.prepare('PRAGMA table_info(expenses)').all();
+if (!expenseColumns.some((column) => column.name === 'transaction_type')) {
+  db.exec("ALTER TABLE expenses ADD COLUMN transaction_type TEXT NOT NULL DEFAULT 'expense' CHECK (transaction_type IN ('expense', 'income'))");
+}
+
+db.exec('CREATE INDEX IF NOT EXISTS idx_expenses_user_type_date ON expenses(user_id, transaction_type, date)');
+
+const insertCategory = db.prepare('INSERT OR IGNORE INTO categories (name, kind) VALUES (?, ?)');
+for (const [name, kind] of [
+  ['Food', 'expense'], ['Rent', 'expense'], ['Phone', 'expense'], ['Utilities', 'expense'],
+  ['Entertainment', 'expense'], ['Transport', 'expense'], ['Other', 'expense'],
+  ['Salary', 'income'], ['Scholarship', 'income'], ['Family support', 'income'], ['Other income', 'income']
+]) {
+  insertCategory.run(name, kind);
 }
 
 function inTransaction(callback) {

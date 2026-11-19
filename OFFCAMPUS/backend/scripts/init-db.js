@@ -11,16 +11,21 @@ async function seed() {
   for (const user of users) {
     const passwordHash = await bcrypt.hash(user.password, 12);
     db.prepare(`
-      INSERT OR IGNORE INTO users (username, email, password_hash)
+      INSERT INTO users (username, email, password_hash)
       VALUES (?, ?, ?)
+      ON CONFLICT(username) DO UPDATE SET
+        email = excluded.email,
+        password_hash = excluded.password_hash
     `).run(user.username, user.email, passwordHash);
   }
 
-  const expenseCount = db.prepare('SELECT COUNT(*) AS count FROM expenses').get().count;
-  if (expenseCount === 0) {
-    const ids = Object.fromEntries(
-      db.prepare('SELECT id, username FROM users').all().map((user) => [user.username, user.id])
-    );
+  const ids = Object.fromEntries(
+    db.prepare('SELECT id, username FROM users').all().map((user) => [user.username.toLowerCase(), user.id])
+  );
+  const demoExpenseCount = db.prepare(`
+    SELECT COUNT(*) AS count FROM expenses WHERE user_id IN (?, ?, ?)
+  `).get(ids.hannah, ids.wellsey, ids.jlo).count;
+  if (demoExpenseCount === 0) {
     const categoryId = (name) => db.prepare('SELECT id FROM categories WHERE name = ?').get(name).id;
     inTransaction(() => {
       const rent = db.prepare(`

@@ -16,8 +16,8 @@ const allowedOrigins = (process.env.FRONTEND_ORIGINS || '')
 module.exports = {
   jwtSecret,
   port: Number(process.env.PORT) || 3000,
+  frontendPort: Number(process.env.FRONTEND_PORT) || 5173,
   allowedOrigins,
-  frontendDirectory: path.join(__dirname, '..', '..', 'frontend'),
   uploadDirectory: process.env.UPLOAD_DIRECTORY
     ? path.resolve(process.env.UPLOAD_DIRECTORY)
     : path.join(__dirname, '..', 'data', 'private-uploads')
